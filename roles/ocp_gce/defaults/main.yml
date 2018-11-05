@@ -13,6 +13,13 @@ gce_default_image: << your gce image >>
 gce_default_docker_size: << size definition docker storage >>
 gce_default_machine_type: << your gce default machine >>
 
+master_machine_type: n1-standard-2
+bastion_machine_type: n1-standard-2
+gluster_machine_type: n1-standard-2
+node_machine_type: n1-standard-4
+infra_machine_type: n1-standard-2
+lb_machine_type: n1-standard-2
+
 # GCE INSTANCES QUANTITY
 masters_qty: 1
 infra_qty: 3
@@ -28,6 +35,7 @@ ssh_default_image_password: << your default password >>
 ssh_default_image_port: 22
 docker_storage_size: 30
 gluster_storage_size: 40
+
 infra_lb_external_ip: << your static ip address for infra lb >>
 master_lb_external_ip: << your static ip address for masters lb >>
 
