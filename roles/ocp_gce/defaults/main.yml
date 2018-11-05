@@ -26,6 +26,8 @@ master_lb_qty: 1
 ssh_default_image_user: << your default user >>
 ssh_default_image_password: << your default password >>
 ssh_default_image_port: 22
+docker_storage_size: 30
+gluster_storage_size: 40
 infra_lb_external_ip: << your static ip address for infra lb >>
 master_lb_external_ip: << your static ip address for masters lb >>
 
@@ -38,3 +40,5 @@ infra_lb: true
 bastion: true
 
 
+
+ 
