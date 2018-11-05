@@ -1,0 +1,66 @@
+# Global settings
+#---------------------------------------------------------------------
+global
+    maxconn     20000
+    log         /dev/log local0 info
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    user        haproxy
+    group       haproxy
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats
+
+#---------------------------------------------------------------------
+# common defaults that all the 'listen' and 'backend' sections will
+# use if not designated in their block
+#---------------------------------------------------------------------
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+#    option http-server-close
+    option forwardfor       except 127.0.0.0/8
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          300s
+    timeout server          300s
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 20000
+
+listen stats :9000
+    mode http
+    stats enable
+    stats uri /
+
+frontend  openshift-router-http
+    bind *:80
+    default_backend openshift-router-http
+    mode tcp
+    option tcplog
+
+frontend  openshift-router-https
+    bind *:443
+    default_backend openshift-router-https
+    mode tcp
+    option tcplog
+
+backend openshift-router-http
+    balance source
+		mode tcp
+{% for host in groups['openshift_infra_hosts'] %}
+    server {{ hostvars[host].instance_name }} {{ hostvars[host].private_ip}}:80 check
+{% endfor %}
+
+backend openshift-router-https
+    balance source
+		mode tcp
+{% for host in groups['openshift_infra_hosts'] %}
+    server {{ hostvars[host].instance_name }} {{ hostvars[host].private_ip }}:443 check
+{% endfor %}

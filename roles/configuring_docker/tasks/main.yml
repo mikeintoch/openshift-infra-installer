@@ -1,0 +1,30 @@
+---
+- name: "Install Docker"
+  yum:
+    name: "docker-1.13.1"
+    state: present
+
+- name: "Stop Docker"
+  service: 
+    name: docker 
+    state: stopped
+  ignore_errors: yes
+
+- name: "Remove any existing docker-storage config file"
+  file:
+    path: /etc/sysconfig/docker-storage
+    state: absent
+
+- name: "Create the docker-storage-setup devicemapper config file"
+  template:
+    src: "docker-storage-setup-dm.j2"
+    dest: /etc/sysconfig/docker-storage-setup
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start docker
+  service: 
+      name: docker 
+      state: restarted 
+      enabled: true

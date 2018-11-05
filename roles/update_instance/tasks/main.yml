@@ -1,0 +1,4 @@
+- name: "Update the entire host"
+  yum:
+    name: '*'
+    state: latest

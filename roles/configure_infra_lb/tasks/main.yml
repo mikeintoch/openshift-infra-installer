@@ -1,0 +1,28 @@
+---
+- name: "Installing haproxy package"
+  yum:
+    name: haproxy
+    state: latest
+
+- name: "Copying Openshift file template"
+  template:
+    src: "haproxy.cfg.j2"
+    dest: "/etc/haproxy/haproxy.cfg"
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "Enable haproxy service"
+  service:
+    state: started
+    enabled: yes
+    name: haproxy
+
+- name: "Adding firewalld rules for haproxy"
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+  with_items:
+      - http
+      - https

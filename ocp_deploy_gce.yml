@@ -1,0 +1,40 @@
+---
+- name: "Create all Openshift Instances GCE"
+  hosts: localhost
+  roles:
+    - ocp_gce
+
+- name: "Copying Openshift RPM Repository"
+  hosts: all
+  roles:
+    - configure_local_repository
+
+- name: "Preparing Openshift Hosts"
+  hosts: openshift_master_hosts,openshift_infra_hosts,openshift_node_hosts,openshift_storage_hosts,openshift_bastion_hosts
+  roles:
+    - preparing_openshift_hosts
+
+- name: "Update all hosts"
+  hosts: all
+  roles:
+    - update_instance
+
+- name: "Configuring Docker"
+  hosts: openshift_master_hosts,openshift_infra_hosts,openshift_node_hosts,openshift_storage_hosts
+  roles:
+    - configuring_docker
+
+- name: "Configuring bastion host"
+  hosts: openshift_bastion_hosts
+  roles:
+    - configuring_bastion_host
+
+- name: "Creating Inventory Host"
+  hosts: openshift_bastion_hosts
+  roles:
+    - configure_inventory_host
+
+- name: "Configure Load Balancer for Infra Nodes"
+  hosts: openshift_infra_lb_hosts
+  roles:
+    - configure_infra_lb

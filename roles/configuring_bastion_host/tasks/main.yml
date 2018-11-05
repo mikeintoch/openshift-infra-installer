@@ -1,0 +1,24 @@
+---
+- name: "Create a 4096-bit SSH key for root user"
+  user:
+    name: root
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    state: present
+  register: source_user
+
+- debug:
+    msg: "{{ source_user }}"
+
+- name: "Add authorized key to all hosts"
+  authorized_key:
+    user: root
+    key: "{{ source_user.ssh_public_key}}"
+    state: present
+  delegate_to: "{{ item }}"
+  with_items:
+    - "{{ groups['openshift_master_hosts'] }}"
+    - "{{ groups['openshift_infra_hosts'] }}"
+    - "{{ groups['openshift_storage_hosts'] }}"
+    - "{{ groups['openshift_master_lb_hosts'] }}"
+    - "{{ groups['openshift_node_hosts'] }}"

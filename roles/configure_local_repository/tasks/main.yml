@@ -1,0 +1,9 @@
+---
+- name: "Copying repository file in /etc/yum.repos.d/"
+  remote_user: root
+  template:
+    src: "ose.repo.j2"
+    dest: "/etc/yum.repos.d/ose.repo"
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"

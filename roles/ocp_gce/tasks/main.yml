@@ -1,0 +1,78 @@
+---
+- name: "Create Master Instances"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ masters_qty }} format=master-%d
+  vars:
+    machine_type: "n1-standard-4"
+    prefix: "master"
+    docker_size: 40
+    docker_storage: true
+  when: masters
+
+- name: "Create Infra Instances"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ infra_qty }} format=infra-%d
+  vars:
+    machine_type: "n1-standard-4"
+    prefix: "infra"
+    docker_size: 20
+    docker_storage: true
+  when: infra
+
+- name: "Create Node Instances"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ node_qty }} format=node-%d
+  vars:
+    machine_type: "n1-standard-4"
+    prefix: "node"
+    docker_size: 40
+    docker_storage: true
+  when: nodes
+
+- name: "Create Storage Instances"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ storage_qty }} format=storage-%d
+  vars:
+    machine_type: "n1-standard-4"
+    prefix: "storage"
+    docker_storage: true
+    docker_size: 40
+    gluster_storage: true
+    gluster_size: 50
+  when: storage
+
+- name: "Create Master Load Balancer Instance"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ master_lb_qty }} format=master-lb-%d
+  vars:
+    machine_type: "n1-standard-4"
+    prefix: "master_lb"
+    external_ip: "{{ master_lb_external_ip }}"
+  when: master_lb
+
+- name: "Create Infra Load Balancer Instance"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ infra_lb_qty }} format=infra-lb-%d
+  vars:
+    machine_type: "n1-standard-4"
+    external_ip: "{{ infra_lb_external_ip }}"
+    prefix: "infra_lb"
+  when: infra_lb
+
+- name: "Create Bastion Instance"
+  include_role:
+    name: create_instance_gce
+  with_sequence: start=1 end={{ bastion_qty }} format=bastion-%d
+  vars:
+    machine_type: "n1-standard-4"
+    prefix: "bastion"
+    docker_storage: false
+    gluster_storage: false
+    private_ip: true
+  when: bastion

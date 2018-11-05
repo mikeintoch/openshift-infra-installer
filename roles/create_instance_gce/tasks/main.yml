@@ -1,0 +1,73 @@
+- name: "Create GCE {{ item }} Instance"
+  gce:
+    instance_names: "{{ item }}"
+    zone: "{{ gce_default_zone }}"
+    machine_type: "{{ machine_type }}"
+    image: "{{ gce_default_image }}"
+    network: "{{ gce_default_network_name }}"
+    subnetwork: "{{ gce_default_subnetwork_name }}"
+    external_ip: "{{ external_ip | default('ephemeral')}}"
+    tags: ["enable-ssh"]
+    disk_auto_delete: True
+    project_id: "{{ gce_project_id }}"
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  register: gce
+
+- name: "Attach Persistent Disk for Docker Storage to {{ item }}"
+  gce_pd:
+    instance_name: "{{ item }}"
+    name: "{{ item }}-docker"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ docker_size }}"
+    zone: "{{ gce_default_zone }}"
+    project_id: "{{ gce_project_id }}"
+    delete_on_termination: true
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  when: 
+    - docker_storage is defined
+    - docker_storage
+
+- name: "Attach Persistent Disk for Gluster Storage to {{ item }}"
+  gce_pd:
+    instance_name: "{{ item }}"
+    name: "{{ item }}-gluster"
+    state: present
+    mode: READ_WRITE
+    disk_type: pd-standard
+    size_gb: "{{ gluster_size }}"
+    zone: "{{ gce_default_zone }}"
+    project_id: "{{ gce_project_id }}"
+    delete_on_termination: true
+    credentials_file: "{{ gce_credentials_file }}"
+    service_account_email: "{{ gce_service_account_email }}"
+  when: 
+    - gluster_storage is defined
+    - gluster_storage
+
+
+- name: Save host {{ item }} data
+  add_host:
+    hostname: "{{ instance.public_ip }}"
+    groupname: openshift_{{ prefix }}_hosts
+    ansible_user: "{{ ssh_default_image_user }}"
+    ansible_password: "{{ ssh_default_image_password }}"
+    instance_name: "{{ item }}"
+    private_ip: "{{ instance.private_ip}}"
+  with_items: "{{ gce.instance_data}}"
+  loop_control:
+      loop_var: instance
+
+- name: Wait for SSH for {{ item }}
+  wait_for:
+    delay: 1
+    host: "{{ instance.public_ip }}"
+    port: 22
+    state: started
+    timeout: 30
+  with_items: "{{ gce.instance_data }}"
+  loop_control:
+    loop_var: instance

@@ -1,0 +1,23 @@
+---
+- name: "Install base packages"
+  yum:
+    name:
+      - vim
+      - psacct
+      - sos
+      - kexec-tools
+      - yum-utils
+      - wget
+      - git
+      - net-tools
+      - bind-utils
+      - iptables-services
+      - bridge-utils
+      - bash-completion
+      - httpd-tools
+    state: present
+
+- name: "Install openshift-ansible packages"
+  yum:
+    name: openshift-ansible
+    state: present

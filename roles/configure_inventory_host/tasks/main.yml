@@ -1,0 +1,18 @@
+---
+- name: "Copying repository file in /etc/yum.repos.d/"
+  remote_user: root
+  template:
+    src: "openshift_hosts.j2"
+    dest: "/etc/ansible/hosts"
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
+
+- name: "Copying ansible.cfg file in /etc/ansible"
+  remote_user: root
+  template:
+    src: "ansible.cfg.j2"
+    dest: "/etc/ansible/ansible.cfg"
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
