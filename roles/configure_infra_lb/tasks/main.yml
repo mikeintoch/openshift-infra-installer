@@ -20,9 +20,17 @@
 
 - name: "Adding firewalld rules for haproxy"
   firewalld:
+    zone: public
     service: "{{ item }}"
+    immediate: yes
     permanent: true
     state: enabled
   with_items:
       - http
       - https
+
+- name: "Reload firewalld"
+  service:
+    state: reloaded
+    enabled: yes
+    name: firewalld
