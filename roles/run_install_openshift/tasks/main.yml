@@ -1,0 +1,8 @@
+---
+- name: "Running openshift preqrequisite playbook"
+  command: "ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/prerequisites.yml"
+  register: command_result
+
+- name: "Running openshift deploy_cluster playbook"
+  command: "ansible-playbook -i /etc/ansible/hosts /usr/share/ansible/openshift-ansible/playbooks/deploy_cluster.yml"
+  register: command_result
