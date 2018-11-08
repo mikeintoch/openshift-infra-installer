@@ -19,34 +19,3 @@ gluster_machine_type: n1-standard-2
 node_machine_type: n1-standard-4
 infra_machine_type: n1-standard-2
 lb_machine_type: n1-standard-2
-
-# GCE INSTANCES QUANTITY
-masters_qty: 1
-infra_qty: 3
-storage_qty: 4
-node_qty: 4
-infra_lb_qty: 1
-bastion_qty: 1
-master_lb_qty: 1
-
-# INSTALLATION DEFAULT
-ssh_default_image_user: << your default user >>
-ssh_default_image_password: << your default password >>
-ssh_default_image_port: 22
-docker_storage_size: 30
-gluster_storage_size: 40
-
-infra_lb_external_ip: << your static ip address for infra lb >>
-master_lb_external_ip: << your static ip address for masters lb >>
-
-masters: true
-infra: true
-nodes: true
-storage: true
-master_lb: true
-infra_lb: true
-bastion: true
-
-
-
- 

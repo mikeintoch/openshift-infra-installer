@@ -1,0 +1,27 @@
+#INSTANCES QUANTITY
+masters_qty: 3
+infra_qty: 3
+storage_qty: 4
+node_qty: 4
+infra_lb_qty: 1
+bastion_qty: 1
+master_lb_qty: 1
+
+# INSTALLATION DEFAULT
+ssh_default_image_user: root
+ssh_default_image_password: r3dh4t1!
+ssh_default_image_port: 22
+infra_lb_external_ip: 35.196.79.26
+master_lb_external_ip: 104.196.2.123
+repository_ip: 192.168.0.2
+docker_storage_size: 30
+gluster_storage_size: 40
+masters: true
+infra: true
+nodes: true
+storage: true
+master_lb: true
+infra_lb: true
+bastion: true
+ocp_user: developer
+ocp_password: r3dh4t1!

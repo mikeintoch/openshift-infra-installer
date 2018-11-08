@@ -1,11 +1,15 @@
 ---
 - name: "Create all Openshift Instances GCE"
   hosts: localhost
+  vars_files:
+    - "group_vars/vars.yml"
   roles:
     - ocp_gce
 
 - name: "Copying Openshift RPM Repository"
   hosts: all
+  vars_files:
+    - "group_vars/vars.yml"
   roles:
     - configure_local_repository
 
@@ -38,3 +42,15 @@
   hosts: openshift_infra_lb_hosts
   roles:
     - configure_infra_lb
+
+- name: "Install Openshift"
+  hosts: openshift_bastion_hosts
+  roles:
+    - run_install_openshift
+
+- name: "Configuring Authorization Provider"
+  hosts: openshift_master_hosts
+  vars_files:
+    - "group_vars/vars.yml"
+  roles:
+    - configuring_authorization
