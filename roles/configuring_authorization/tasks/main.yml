@@ -1,3 +1,6 @@
 ---
 - name: "Creating developer user: {{ ocp_user }} in htpasswd file"
-  command: "htpasswd -b /etc/origin/master/htpasswd {{ ocp_user }} {{ ocp_password }}"
+  htpasswd:
+    path: /etc/origin/master/htpasswd
+    name: "{{ ocp_user }}"
+    password: "{{ ocp_password }}"
