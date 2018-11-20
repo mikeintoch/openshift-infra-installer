@@ -8,14 +8,14 @@ bastion_qty: 1
 master_lb_qty: 1
 
 # INSTALLATION DEFAULT
-ssh_default_image_user: root
-ssh_default_image_password: r3dh4t1!
+ssh_default_image_user: << ssh user instance >>
+ssh_default_image_password: << ssh password instance >>
 ssh_default_image_port: 22
-infra_lb_external_ip: 35.196.79.26
-master_lb_external_ip: 104.196.2.123
-repository_ip: 192.168.0.2
-docker_storage_size: 30
-gluster_storage_size: 40
+infra_lb_external_ip: << ip static for lb infra >>
+master_lb_external_ip: << ip static for lb master >>
+repository_ip: << ip internal rpm repository >>
+docker_storage_size: << docker storage size >>
+gluster_storage_size: << gluster storage size >>
 masters: true
 infra: true
 nodes: true
@@ -23,5 +23,5 @@ storage: true
 master_lb: true
 infra_lb: true
 bastion: true
-ocp_user: developer
-ocp_password: r3dh4t1!
+ocp_user: << ocp user >>
+ocp_password: << ocp password >>
