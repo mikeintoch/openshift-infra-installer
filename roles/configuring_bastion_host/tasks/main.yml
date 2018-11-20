@@ -1,4 +1,9 @@
 ---
+- name: "Install atomic-openshift-clients package"
+  yum:
+    name: atomic-openshift-clients
+    state: present
+
 - name: "Create a 4096-bit SSH key for root user"
   user:
     name: root
